@@ -1,0 +1,69 @@
+{
+    "variables": {
+      "wvdbuildartifacts_path": "{{env `wvdbuildartifactspath`}}",
+      "wvdbuildartifacts_storageaccountkey": "{{env `wvdbuildartifactskey`}}",
+
+      "az_tenant_id": "{{env `az_tenant_id`}}",
+      "subscription_id": "{{env `ARM_SUBSCRIPTION_ID`}}",
+
+      "packaged_app_installs_path": "{{env `packaged_app_installs_path`}}",
+      
+
+      "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
+      "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
+    },
+    "builders": [{
+      "type": "azure-arm",
+  
+      "tenant_id": "3fd11e85-d8ce-4c7f-b6a0-816346615777",
+      "subscription_id": "eb2cf854-8c12-4583-97bf-43bf12f1a688",
+  
+      "managed_image_resource_group_name": "xstof-wvd-managed-image",
+      "managed_image_name": "xstof-wvd-session-host",
+  
+      "os_type": "Windows",
+      "image_publisher": "MicrosoftWindowsDesktop",
+      "image_offer": "office-365",
+      "image_sku": "19h2-evd-o365pp",
+  
+      "communicator": "winrm",
+      "winrm_use_ssl": true,
+      "winrm_insecure": true,
+      "winrm_timeout": "20m",
+      "winrm_username": "packer",
+  
+      "azure_tags": {
+          "dept": "Engineering",
+          "task": "Image deployment"
+      },
+  
+      "location": "East US",
+      "vm_size": "Standard_DS2_v2"
+    }],
+    "provisioners": [
+      {
+        "type": "windows-update"
+      },
+      {
+        "type": "powershell",
+        "inline": [
+            "$ErrorActionPreference='Stop'",
+  
+            "Import-Module -Name Smbshare -Force -Scope Local",
+            "$Usr='xstofwvdbuildartifacts'",
+            "New-SmbMapping -LocalPath J: -RemotePath \"{{user `wvdbuildartifacts_path`}}\" -Username \"$Usr\" -Password \"{{user `wvdbuildartifacts_storageaccountkey`}}\"",
+            "Write-Host \"'J:' drive mapped with wvd image build artifacts\"",
+  
+            "J:\\fslogix\\FSLogix_Apps_2.9.7237.48865\\x64\\Release\\FSLogixAppsSetup.exe /install /quiet",
+            "Write-Host \"'FSLogix\\2.9.7237.48865' installed\""
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+          "if( Test-Path $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml ){ rm $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml -Force}",
+          "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+          "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+        ]
+    }]
+  }
