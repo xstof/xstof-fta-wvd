@@ -29,7 +29,7 @@
       "communicator": "winrm",
       "winrm_use_ssl": true,
       "winrm_insecure": true,
-      "winrm_timeout": "20m",
+      "winrm_timeout": "40m",
       "winrm_username": "packer",
   
       "azure_tags": {
@@ -56,6 +56,33 @@
   
             "J:\\fslogix\\FSLogix_Apps_2.9.7237.48865\\x64\\Release\\FSLogixAppsSetup.exe /install /quiet",
             "Write-Host \"'FSLogix\\2.9.7237.48865' installed\""
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+            "$ErrorActionPreference='Stop'",
+
+            "mkdir C:\\utilities",
+            "copy J:\\connectionexperienceindicator\\ExperienceIndicator.exe C:\\utilities",
+            "Write-Host \"Connection Experience Indicator copied to utility folder\"",
+
+            "$StartUpFolder=\"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\"",
+            "Write-Host \"Startup folder for all users is: $StartUpFolder\"",
+            "New-Item -ItemType SymbolicLink -Path \"$StartUpFolder\" -Name \"ConnectionExperienceIndicator.lnk\" -Value \"C:\\utilities\\ExperienceIndicator.exe\"",
+            "Write-Host \"Created Connection Experience Indicator shortcut in startup folder\""
+        ]
+      },
+      {
+        "type": "powershell",
+        "elevated_user": "packer",
+        "elevated_password": "{{.WinRMPassword}}",
+        "inline": [
+          "# Write-Host \"Install Az cmdlets...\"",
+          "# Install-Module -Name Az -AllowClobber",
+
+          "Write-Host \"Disabling Automatic Updates...\"",
+          "reg add HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 1 /f"
         ]
       },
       {

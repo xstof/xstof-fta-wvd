@@ -34,3 +34,24 @@ $env:wvdbuildartifactskey = "m3aADPBLnMZ6P3vQJPjy6P...DTo2Gvhu40DjDvwg=="
 packer build -force .\sessionhost.json
 ~~~
 
+## Setup Group Policies relevant to WVD:
+
+### Add adminstrative templates
+
+First we need to add administrative templates so they show up in `gpmc.msc`.  To do this, copy all files from `C:\Windows\PolicyDefinitions` to `\\dccomputername\SYSVOL\yourdomain.tld\Policies\PolicyDefinitions`
+
+![Copy adminstrative templates](./images/wvd-group-policy-copy-administrative-templates.png)
+
+### Timezone Redirection
+
+This setting allows the user to work in the same timezone as their own local machine.
+
+![Enable timezone redirection](./images/wvd-group-policy-allow-timezone-redirection.png)
+
+
+## Things to include in image
+
+Connection Experience indicator: 
+- https://bramwolfs.com/2020/03/11/connection-experience-indicator-for-rds-wvd/ - no installation, just exe which can be run on startup
+- 
+
