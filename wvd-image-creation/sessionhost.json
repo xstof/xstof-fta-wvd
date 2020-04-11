@@ -2,13 +2,15 @@
     "variables": {
       "wvdbuildartifacts_path": "{{env `wvdbuildartifactspath`}}",
       "wvdbuildartifacts_storageaccountkey": "{{env `wvdbuildartifactskey`}}",
+      "wvdimage_resourcegroup_name": "xstof-wvd-managed-image",
+      "wvdimage_name": "xstof-wvd-session-host",
+
 
       "az_tenant_id": "{{env `az_tenant_id`}}",
       "subscription_id": "{{env `ARM_SUBSCRIPTION_ID`}}",
 
       "packaged_app_installs_path": "{{env `packaged_app_installs_path`}}",
       
-
       "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
       "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
     },
@@ -18,8 +20,8 @@
       "tenant_id": "3fd11e85-d8ce-4c7f-b6a0-816346615777",
       "subscription_id": "eb2cf854-8c12-4583-97bf-43bf12f1a688",
   
-      "managed_image_resource_group_name": "xstof-wvd-managed-image",
-      "managed_image_name": "xstof-wvd-session-host",
+      "managed_image_resource_group_name": "{{user `wvdimage_resourcegroup_name`}}",
+      "managed_image_name": "{{user `wvdimage_name`}}",
   
       "os_type": "Windows",
       "image_publisher": "MicrosoftWindowsDesktop",
@@ -37,7 +39,7 @@
           "task": "Image deployment"
       },
   
-      "location": "Central US",
+      "location": "East US",
       "vm_size": "Standard_DS2_v2"
     }],
     "provisioners": [
