@@ -29,7 +29,7 @@
       "communicator": "winrm",
       "winrm_use_ssl": true,
       "winrm_insecure": true,
-      "winrm_timeout": "40m",
+      "winrm_timeout": "20m",
       "winrm_username": "packer",
   
       "azure_tags": {
@@ -37,7 +37,7 @@
           "task": "Image deployment"
       },
   
-      "location": "East US",
+      "location": "Central US",
       "vm_size": "Standard_DS2_v2"
     }],
     "provisioners": [
@@ -71,18 +71,6 @@
             "Write-Host \"Startup folder for all users is: $StartUpFolder\"",
             "New-Item -ItemType SymbolicLink -Path \"$StartUpFolder\" -Name \"ConnectionExperienceIndicator.lnk\" -Value \"C:\\utilities\\ExperienceIndicator.exe\"",
             "Write-Host \"Created Connection Experience Indicator shortcut in startup folder\""
-        ]
-      },
-      {
-        "type": "powershell",
-        "elevated_user": "packer",
-        "elevated_password": "{{.WinRMPassword}}",
-        "inline": [
-          "# Write-Host \"Install Az cmdlets...\"",
-          "# Install-Module -Name Az -AllowClobber",
-
-          "Write-Host \"Disabling Automatic Updates...\"",
-          "reg add HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU /v NoAutoUpdate /t REG_DWORD /d 1 /f"
         ]
       },
       {
