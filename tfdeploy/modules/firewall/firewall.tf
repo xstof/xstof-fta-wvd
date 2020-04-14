@@ -48,3 +48,4 @@ resource "azurerm_firewall" "fw" {
     public_ip_address_id = azurerm_public_ip.fw_pip.id
   }
 }
+
