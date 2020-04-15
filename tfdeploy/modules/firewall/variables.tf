@@ -33,6 +33,11 @@ variable "fw_vnet_resource_group_to_peer_with" {
   default = "xstof-wvd-hostpool-vnet"
 }
 
+variable "fw_subnet_to_route_traffic_from_to_fw" {
+  type    = string
+  default = "xstof-wvd-hostpool-snet"
+}
+
 variable "fw_pip_name" {
   type    = string
   default = "xstof-wvd-fw-pip"
@@ -42,3 +47,4 @@ variable "fw_name" {
   type    = string
   default = "xstof-wvd-fw"
 }
+
