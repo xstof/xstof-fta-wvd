@@ -345,3 +345,13 @@ Updating the host pool can be done based on this template: https://github.com/Az
 For this to work:
 - you need to have a service principal (see earlier) which has contributor rights on the hostpool resource group
 - you need to specify a different sessionhost prefix than you chose before when you last deployed the hostpool
+
+## WVD Networking
+
+### Whitelist O365 Urls
+
+See:
+- https://docs.microsoft.com/en-us/office365/enterprise/urls-and-ip-address-ranges
+- https://docs.microsoft.com/en-us/office365/enterprise/office-365-ip-web-service
+- https://endpoints.office.com/endpoints/worldwide?clientrequestid=b10c5ed1-bad1-445f-b386-b919946339a7
+

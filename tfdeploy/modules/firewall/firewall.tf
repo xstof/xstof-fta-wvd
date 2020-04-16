@@ -17,7 +17,7 @@ resource "azurerm_subnet" "fw_subnet" {
 resource "azurerm_virtual_network_peering" "fw-vnet-to-hostpool" {
   name                      = "fw-vnet-to-hostpool"
   resource_group_name       = var.fw_resource_group
-  virtual_network_name      = var.fw_vnet_name
+  virtual_network_name      = azurerm_virtual_network.fw_vnet.name
   remote_virtual_network_id = data.azurerm_virtual_network.vnet_to_peer_with.id
 }
 

@@ -1,5 +1,5 @@
 resource "azurerm_log_analytics_workspace" "fw_loganalytics" {
-  name                = "${var.fw_name}-la"
+  name                = "${var.fw_name}-laws"
   location            = var.fw_location
   resource_group_name = var.fw_resource_group
   sku                 = "PerGB2018"
@@ -7,7 +7,7 @@ resource "azurerm_log_analytics_workspace" "fw_loganalytics" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "fw_loganalytics_diagsetting" {
-  name                            = "${var.fw_name}-la-diagnostics"
+  name                            = "${var.fw_name}-la-diag"
   target_resource_id              = azurerm_firewall.fw.id
   log_analytics_workspace_id      = azurerm_log_analytics_workspace.fw_loganalytics.id
   log_analytics_destination_type  = "Dedicated"
