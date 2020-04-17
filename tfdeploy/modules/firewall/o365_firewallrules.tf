@@ -7,7 +7,6 @@ locals {
       id        = r.id,
       tcpPorts  = try(split(",", r.tcpPorts), [])
     }
-    # url list must be there and can only concern port 80 and 443 for application rules:
     if length(try(r.urls, [])) > 0 && length(setintersection(toset(try(split(",", r.tcpPorts), [])), [80, 443])) > 0
   }
   other_0365_rules = {for r in jsondecode(data.http.o365_urls_to_whitelist.body): "${r.id}-${r.serviceArea}" => r
@@ -74,8 +73,8 @@ resource "azurerm_firewall_network_rule_collection" "fw_o365_network_rules" {
   }
 }
 
-resource "azurerm_firewall_application_rule_collection" "fw_o365_rules" {
-  name                = "allow_o365_urls"
+resource "azurerm_firewall_application_rule_collection" "fw_o365_app_rules" {
+  name                = "allow_all_o365_urls"
   azure_firewall_name = azurerm_firewall.fw.name
   resource_group_name = var.fw_resource_group
   priority            = 300

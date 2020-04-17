@@ -1,0 +1,56 @@
+{
+    "variables": {
+        "squid_image_resourcegroup_name": "xstof-wvd-managed-image",
+        "squid_image_name": "xstof-squid-proxy"
+    },
+    "builders": [
+        {
+            "type": "azure-arm",
+            "tenant_id": "3fd11e85-d8ce-4c7f-b6a0-816346615777",
+            "subscription_id": "eb2cf854-8c12-4583-97bf-43bf12f1a688",
+            "managed_image_resource_group_name": "{{user `squid_image_resourcegroup_name`}}",
+            "managed_image_name": "{{user `squid_image_name`}}",
+            "os_type": "Linux",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "16.04-LTS",
+            "azure_tags": {
+                "dept": "Engineering",
+                "task": "Image deployment"
+            },
+            "location": "East US",
+            "vm_size": "Standard_DS2_v2"
+        }
+    ],
+    "provisioners": [
+        {
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "apt-get update",
+                "apt-get upgrade -y",
+                "apt-get install squid -y",
+                "# cat /etc/squid/squid.conf",
+                "systemctl stop squid.service"
+            ],
+            "inline_shebang": "/bin/sh -x",
+            "type": "shell"
+        },
+        {
+            "type": "file",
+            "source": ".\\squid.conf",
+            "destination": "/tmp/squid.conf"
+        },
+        {
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "valid_exit_codes": [0, 1],
+            "inline": [
+                "cp -rp /tmp/squid.conf /etc/squid/squid.conf",
+                "systemctl status squid.service",
+                "systemctl start squid.service",
+                "systemctl status squid.service"
+            ],
+            "inline_shebang": "/bin/sh -x",
+            "type": "shell"
+        }
+    ]
+}
