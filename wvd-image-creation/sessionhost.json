@@ -50,6 +50,17 @@
         "type": "powershell",
         "inline": [
             "$ErrorActionPreference='Stop'",
+
+            "Write-Host \"Installing Chocolatey.\"",
+            "Invoke-Expression ((New-Object -TypeName net.webclient).DownloadString('https://chocolatey.org/install.ps1'))",
+            "& choco feature enable -n allowGlobalConfirmation",
+            "Write-Host \"Chocolatey Installed.\""
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+            "$ErrorActionPreference='Stop'",
   
             "Import-Module -Name Smbshare -Force -Scope Local",
             "$Usr='xstofwvdbuildartifacts'",
@@ -73,6 +84,16 @@
             "Write-Host \"Startup folder for all users is: $StartUpFolder\"",
             "New-Item -ItemType SymbolicLink -Path \"$StartUpFolder\" -Name \"ConnectionExperienceIndicator.lnk\" -Value \"C:\\utilities\\ExperienceIndicator.exe\"",
             "Write-Host \"Created Connection Experience Indicator shortcut in startup folder\""
+        ]
+      },
+      {
+        "type": "powershell",
+        "inline": [
+            "$ErrorActionPreference='Stop'",
+
+            "Write-Host \"Installing Microsoft Edge\"",
+            "choco install microsoft-edge",
+            "Write-Host \"Microsoft Edge installed\""
         ]
       },
       {
