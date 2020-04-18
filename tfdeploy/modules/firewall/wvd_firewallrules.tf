@@ -79,6 +79,12 @@ resource "azurerm_firewall_application_rule_collection" "fw_wvd_app_rules" {
   resource_group_name = var.fw_resource_group
   priority            = 400
   action              = "Allow"
+  timeouts {
+    create = "2h"
+    delete = "2h"
+    update = "2h"
+    read = "2h"
+  }
 
   # see https://www.hashicorp.com/blog/hashicorp-terraform-0-12-preview-for-and-for-each/
   dynamic "rule" {
@@ -109,6 +115,12 @@ resource "azurerm_firewall_application_rule_collection" "fw_wvd_other_app_rules"
   resource_group_name = var.fw_resource_group
   priority            = 500
   action              = "Allow"
+  timeouts {
+    create = "2h"
+    delete = "2h"
+    update = "2h"
+    read = "2h"
+  }
 
   # see https://www.hashicorp.com/blog/hashicorp-terraform-0-12-preview-for-and-for-each/
   dynamic "rule" {
@@ -138,6 +150,12 @@ resource "azurerm_firewall_network_rule_collection" "fw_wvd_network_rules" {
   resource_group_name = var.fw_resource_group
   priority            = 150
   action              = "Allow"
+  timeouts {
+    create = "2h"
+    delete = "2h"
+    update = "2h"
+    read = "2h"
+  }
 
   dynamic "rule" {
     for_each = local.wvdNetworkRules

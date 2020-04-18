@@ -18,42 +18,18 @@ locals {
   }
 }
 
-
-# resource "azurerm_firewall_network_rule_collection" "fw_rules" {
-#   name                = "allow_all"
-#   azure_firewall_name = azurerm_firewall.fw.name
-#   resource_group_name = var.fw_resource_group
-#   priority            = 201
-#   action              = "Deny"
-
-#   rule {
-#     name = "allow_all"
-
-#     source_addresses = [
-#       local.source_addresses
-#     ]
-
-#     destination_ports = [
-#       "*",
-#     ]
-
-#     destination_addresses = [
-#       "0.0.0.0/0",
-#     ]
-
-#     protocols = [
-#       "TCP",
-#       "UDP",
-#     ]
-#   }
-# }
-
 resource "azurerm_firewall_network_rule_collection" "fw_o365_network_rules" {
   name                = "allow_all_0365_ips"
   azure_firewall_name = azurerm_firewall.fw.name
   resource_group_name = var.fw_resource_group
   priority            = 101
   action              = "Allow"
+  timeouts {
+    create = "2h"
+    delete = "2h"
+    update = "2h"
+    read = "2h"
+  }
 
   dynamic "rule" {
     for_each = local.other_0365_rules
@@ -79,6 +55,12 @@ resource "azurerm_firewall_application_rule_collection" "fw_o365_app_rules" {
   resource_group_name = var.fw_resource_group
   priority            = 300
   action              = "Allow"
+  timeouts {
+    create = "2h"
+    delete = "2h"
+    update = "2h"
+    read = "2h"
+  }
 
   # see https://www.hashicorp.com/blog/hashicorp-terraform-0-12-preview-for-and-for-each/
   dynamic "rule" {
