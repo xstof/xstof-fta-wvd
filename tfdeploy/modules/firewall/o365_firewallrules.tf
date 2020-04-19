@@ -42,7 +42,8 @@ resource "azurerm_firewall_network_rule_collection" "fw_o365_network_rules" {
       ]
 
       destination_ports = concat(try(split(",", rule.value.tcpPorts), []), try(split(",", rule.value.udpPorts), []))
-      destination_addresses = rule.value.ips
+      # filter out ipv6 addresses:
+      destination_addresses = [for p in rule.value.ips: p if replace(p, ":", "") == p] 
       protocols = compact(split(",", "${length(try(rule.value.tcpPorts, [])) > 0 ? "TCP" : ""},${length(try(rule.value.udpPorts, [])) > 0 ? "UDP" : ""}"))
     }
     
